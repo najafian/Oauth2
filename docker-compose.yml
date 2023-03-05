@@ -1,0 +1,28 @@
+version: "3.5"
+services:
+  mysqldb:
+    image: mysql:8.0.31
+    restart: unless-stopped
+    env_file: .env
+#    command: --init-file /data/application/V1__init.sql
+    environment:
+#      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+      - MYSQL_DATABASE=$MYSQLDB_DATABASE
+    ports:
+      - "$MYSQLDB_LOCAL_PORT:3306"
+    volumes:
+      - data_oauth:/var/lib/mysql
+#      - ./V1__init.sql:/data/application/V1__init.sql
+  oauth:
+    depends_on:
+      - mysqldb
+    env_file: .env
+    build:
+      context: .
+    ports:
+      - "$OAUTH_DOCKER_PORT:$OAUTH_DOCKER_PORT"
+
+#
+volumes:
+  data_oauth:

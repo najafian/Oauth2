@@ -1,0 +1,82 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health,prometheus
+account:
+  list[0]:
+    given-name: Taro
+    email: demo@example.com
+    family-name: Yamada
+    password: '{noop}password'
+  list[1]:
+    given-name: John
+    email: john@example.com
+    password: '{noop}password'
+    family-name: Doe
+jwt:
+  public-key: classpath:public_key.pem
+  private-key: classpath:private_key.pem
+oauth:
+  clients[0]:
+    authorized-grant-types: authorization_code,password,refresh_token
+    access-token-validity-seconds: '86400'
+    client-secret: '{noop}HeliaUserSecret'
+    auto-approve-scopes: ${oauth.clients[0].scope}
+    additional-information:
+      name: Todo List
+      url: http://127.0.0.1:8080
+    refresh-token-validity-seconds: '604800'
+    client-id: HeliaUserClient
+    registered-redirect-uri: ${oauth.clients[0].additional-information.url}/login/oauth2/code/demo
+    scope: openid,todo:read,todo:write
+  clients[1]:
+    access-token-validity-seconds: '3600'
+    client-secret: '{noop}HeliaAdminSecret1'
+    refresh-token-validity-seconds: '43200'
+    scope: todo:admin
+    authorized-grant-types: client_credentials,refresh_token
+    client-id: HeliaAdminClient1
+
+spring:
+  datasource:
+    initialize: false
+    type: com.zaxxer.hikari.HikariDataSource
+    url: ${MYSQLDB_URL:jdbc:mysql://172.17.0.1:3310/oauth?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true}
+    username: root
+    password: ${MYSQLDB_ROOT_PASSWORD:123456}
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+    jpa:
+      show-sql: true
+      hibernate:
+        ddl-auto: update
+  sleuth:
+    sampler:
+      rate: '30'
+  application:
+    name: authorization
+  zipkin:
+    enabled: 'false'
+server:
+  port: ${OAUTH_DOCKER_PORT:9999}
+  error:
+    include-message: always
+
+
+#logging:
+#  level:
+#    org.springframework.security.web.access.intercept.FilterSecurityInterceptor: DEBUG
+#    web: DEBUG
+
+
+app:
+  cors:
+    allowed-origins: ${CORS:'http://localhost:3000'}
+
