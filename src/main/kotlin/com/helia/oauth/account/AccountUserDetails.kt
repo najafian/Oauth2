@@ -1,6 +1,6 @@
 package com.helia.oauth.account
 
-import com.webhead.common.user.UserAccount
+import com.helia.oauth.model.user.UserAccount
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.AuthorityUtils
 import org.springframework.security.core.userdetails.UserDetails
@@ -13,28 +13,28 @@ class AccountUserDetails(var userAccount: UserAccount) : UserDetails {
         return AuthorityUtils.createAuthorityList(*this.userAccount.roles.toTypedArray())
     }
 
-    override fun getPassword(): String {
+    override fun getPassword(): String? {
         return userAccount.password
     }
 
-    override fun getUsername(): String {
+    override fun getUsername(): String? {
         return userAccount.email
     }
 
     override fun isAccountNonExpired(): Boolean {
-        return userAccount.expirationDate>ZonedDateTime.now()
+        return userAccount.expirationDate!!>ZonedDateTime.now()
     }
 
     override fun isAccountNonLocked(): Boolean {
-        return !userAccount.isLocked
+        return !(userAccount.isLocked)
     }
 
     override fun isCredentialsNonExpired(): Boolean {
-        return  userAccount.isEnabled
+        return  userAccount.isEnabled!!
     }
 
     override fun isEnabled(): Boolean {
-        return userAccount.isEnabled
+        return userAccount.isEnabled!!
     }
 
 }

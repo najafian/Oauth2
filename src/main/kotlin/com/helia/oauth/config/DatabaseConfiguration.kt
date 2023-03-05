@@ -1,6 +1,5 @@
 package com.helia.oauth.config
 
-import com.webhead.common.config.H2ConfigurationHelper
 import java.sql.SQLException
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
@@ -23,14 +22,14 @@ class DatabaseConfiguration(private val env: Environment) {
      * @return the H2 database TCP server.
      * @throws SQLException if the server failed to start.
      */
-    @Throws(SQLException::class)
-    @Bean(initMethod = "start", destroyMethod = "stop")
-    @Profile("dev")
-    fun h2TCPServer(): Any {
-        val port = getValidPortForH2()
-        log.debug("H2 database is available on port $port")
-        return H2ConfigurationHelper.createServer(port)
-    }
+//    @Throws(SQLException::class)
+//    @Bean(initMethod = "start", destroyMethod = "stop")
+//    @Profile("dev")
+//    fun h2TCPServer(): Any {
+//        val port = getValidPortForH2()
+//        log.debug("H2 database is available on port $port")
+//        return H2ConfigurationHelper.createServer(port)
+//    }
 
     private fun getValidPortForH2(): String {
         var port = Integer.parseInt(env.getProperty("server.port"))

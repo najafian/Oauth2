@@ -1,6 +1,5 @@
 package com.helia.oauth.model.user
 
-import com.webhead.common.user.UserAccount
 import java.time.ZonedDateTime
 import javax.persistence.*
 
@@ -42,7 +41,7 @@ class UserAccountEntity(
     var lastName: String? = null,
 
     @Column(name = "locked")
-    var isLocked: Boolean? = null,
+    var isLocked: Boolean = false,
 
     @Column(name = "expirationDate")
     var expirationDate: ZonedDateTime? = null,
